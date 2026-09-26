@@ -1,13 +1,14 @@
 # Smile Andy — Checkpoints
 
 Each checkpoint lives on its own branch, cut from the previous one (`main → a → b → c → d → e`).
-When a checkpoint is reviewed and accepted: `git switch main && git merge --ff-only <branch> && git push`.
+When a checkpoint is done: push its branch → `gh pr create --base main` → you review → `gh pr merge --merge` → `git switch main && git pull`.
+(A was fast-forwarded before this rule; PRs start at B.)
 Session prompts and time caps come from `PLAN.md`. Hard cap per checkpoint: 15–20 min.
 
 | CP | Branch | Adds | Done when |
 |---|---|---|---|
 | A | `checkpoint-a-setup` | venv, deps, model file, `.env`, setup check | `check_setup.py` prints PASS for camera, model, API key |
-| B | `checkpoint-b-face-tracking-overlay` | `tracking.py`, `main.py`, `config.py` (Session 1) | live window shows landmarks + FPS; "No face detected" when away |
+| B | `checkpoint-b-face-tracking-overlay` | `tracking.py`, `main.py`, `config.py` (Session 1) | http://localhost:8000 shows live face with contour lines + FPS; "No face detected" when away |
 | C | `checkpoint-c-expression` | `expression.py` (Session 2) | label switches to HAPPY and SAD on purpose |
 | D | `checkpoint-d-openai-cheer` | `cheer.py` (Session 3) | frown 3 s → message on screen and spoken |
 | E | `checkpoint-e-polish-bugfix` | Sessions 4 + 5 (polish, then bug fixes only) | clean UI, all keys work, runs 5 min without crashing |
@@ -32,11 +33,14 @@ Session prompts and time caps come from `PLAN.md`. Hard cap per checkpoint: 15�
 - **Note:** mediapipe 1.0.1 crashes on `FaceLandmarker.create_from_options` (`graph_service.h: Service is unavailable`), even with CPU delegate. Pinned to 0.10.35, which works.
 
 ## B — Face tracking + overlay
-- [ ] Status
-- **Goal:** mirrored webcam feed with MediaPipe landmarks drawn, FPS top-left. No expression logic.
-- **Files:** `tracking.py`, `main.py`, `config.py`
-- **Done when:** live window shows face landmarks + FPS; Q quits
-- **Verified / not verified:** _(fill in at end)_
+- [x] Status (PR open, awaiting review)
+- **Goal:** mirrored webcam feed with face contour lines (oval, eyes, brows, lips), FPS top-left, served as a localhost web page. No expression logic.
+- **Files:** `tracking.py`, `main.py` (Flask, MJPEG stream), `config.py`, `requirements.txt` (+Flask)
+- **Run:** `.venv/bin/python main.py` → open http://localhost:8000 → Ctrl+C to stop
+- **Done when:** page shows your face with contour lines following it + FPS; "No face detected" when you leave the frame
+- **Verified:** FaceTracker 30/30 frames with face, 478 landmarks, 52 blendshapes; `/` returns 200; `/video` streams ~30 JPEG frames/s; browser screenshot shows contour lines on face at 29 FPS.
+- **Not verified:** "No face detected" text (needs you to step out of frame); two browser tabs at once (lock should keep it safe, not tested).
+- **Change from PLAN.md:** web page (Flask MJPEG) instead of OpenCV window, so Q-to-quit is replaced by Ctrl+C. Port 8000 because macOS AirPlay holds 5000.
 
 ## C — Expression
 - [ ] Status
