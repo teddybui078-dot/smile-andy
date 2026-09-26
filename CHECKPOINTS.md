@@ -15,7 +15,7 @@ Session prompts and time caps come from `PLAN.md`. Hard cap per checkpoint: 15â€
 ---
 
 ## A â€” Setup
-- [x] Status (awaiting review; API key step is on you)
+- [x] Status (approved)
 - **Goal:** everything installed and proven working before any app code.
 - **Files:** `requirements.txt`, `check_setup.py`, `models/face_landmarker.task` (not committed), `.env` (not committed)
 - **Setup from scratch:**
@@ -27,8 +27,8 @@ Session prompts and time caps come from `PLAN.md`. Hard cap per checkpoint: 15â€
   cp .env.example .env                             # then paste your OPENAI_API_KEY
   ```
 - **Done when:** `.venv/bin/python check_setup.py` â†’ camera PASS, model PASS, API key PASS
-- **Verified:** camera PASS, model PASS (Python 3.12, mediapipe 0.10.35).
-- **Not verified:** API key: `.env` not created yet. Key validity against OpenAI not tested (only checks it is set).
+- **Verified:** camera PASS, model PASS, API key PASS (Python 3.12, mediapipe 0.10.35, Apple M4 Pro).
+- **Not verified:** key validity against OpenAI (check only confirms it is set); first real call is in Checkpoint D.
 - **Note:** mediapipe 1.0.1 crashes on `FaceLandmarker.create_from_options` (`graph_service.h: Service is unavailable`), even with CPU delegate. Pinned to 0.10.35, which works.
 
 ## B â€” Face tracking + overlay
