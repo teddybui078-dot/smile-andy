@@ -1,0 +1,5 @@
+mediapipe==0.10.35
+openai==3.19.2
+opencv-python==5.0.0.93
+pygame==2.6.1
+python-dotenv==1.2.3
