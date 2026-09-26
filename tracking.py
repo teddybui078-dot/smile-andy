@@ -34,6 +34,8 @@ class FaceTracker:
         return frame, result.face_landmarks[0], blendshapes
 
     def draw_overlay(self, frame, landmarks, color):
+        """Draws face oval, eyes, eyebrows and lips as connected lines."""
         h, w = frame.shape[:2]
-        for lm in landmarks:
-            cv2.circle(frame, (int(lm.x * w), int(lm.y * h)), config.DOT_RADIUS, color, -1)
+        pts = [(int(lm.x * w), int(lm.y * h)) for lm in landmarks]
+        for c in vision.FaceLandmarksConnections.FACE_LANDMARKS_CONTOURS:
+            cv2.line(frame, pts[c.start], pts[c.end], color, config.LINE_THICKNESS, cv2.LINE_AA)
